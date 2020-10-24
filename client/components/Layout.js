@@ -7,7 +7,7 @@ export default function Layout({ children }) {
   return (
     <>
       <Head>
-        <title>NodeSend - Next.js</title>
+        <title>ReactNodeSend</title>
         <link
           href='https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css'
           rel='stylesheet'
