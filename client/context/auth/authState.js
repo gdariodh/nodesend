@@ -12,7 +12,7 @@ import {
   LOGIN_EXITOSO,
   LOGIN_ERROR,
   USUARIO_AUTENTICADO,
-  CERRAR_SESION
+  CERRAR_SESION,
 } from "../../types";
 // axios configurado -> para usar variables de env - TODO: RECUERDA TENER EL CORS HABILITADO! en el backend de node
 import clienteAxios from "../../config/axios";
@@ -132,9 +132,9 @@ export default function AuthState({ children }) {
 
   const cerrarSesion = () => {
     dispatch({
-      type:CERRAR_SESION
-    })
-  }
+      type: CERRAR_SESION,
+    });
+  };
 
   // lo que estara disponible en los componentes hijos
   return (
@@ -148,7 +148,7 @@ export default function AuthState({ children }) {
         registrarUsuario,
         iniciarSesion,
         usuarioAutenticado,
-        cerrarSesion
+        cerrarSesion,
       }}>
       {children}
     </authContext.Provider>

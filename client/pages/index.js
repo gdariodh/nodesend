@@ -1,14 +1,19 @@
 import Layout from "../components/Layout";
 import React, { useContext, useEffect } from "react";
 import authContext from "../context/auth/authContext";
+import dropzoneContext from "../context/dropzone/dropzoneContext";
 import Link from "next/link";
 // component
 import Dropzone from "../components/Dropzone";
+import Alerta from "../components/Alerta"
 
 export default function Home() {
   // extraer el usuario autenticado del storage
   const AuthContext = useContext(authContext);
   const { usuarioAutenticado } = AuthContext;
+  // el otro context para el msg de alerta 
+  const DropzoneContext = useContext(dropzoneContext);
+  const { msg_archivo } = DropzoneContext;
 
   useEffect(() => {
     // fn que revisa si hay un token en el localStorage - se ejecuta apenas carga la app
@@ -19,6 +24,7 @@ export default function Home() {
     <>
       <Layout>
         <div className='md:w-4/5 xl:3/5 mx-auto mb-32'>
+        {msg_archivo && <Alerta mensaje={msg_archivo}/>}
           <div className='lg:flex md:shadow-lg p-5 bg-white rounded-lg py-10'>
             <Dropzone />
 

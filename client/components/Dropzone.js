@@ -1,24 +1,28 @@
-import React, { useState, useCallback } from "react";
+  // TODO:  useCallback mejora los renderings que hace cuando se van pasando data por ejemplo en la fn de onDrop!
+import React, { useState, useCallback, useContext } from "react";
 // libreria
 import { useDropzone } from "react-dropzone";
 // cliente para hacer las peticiones
 import clienteAxios from "../config/axios";
+// context
+import dropzoneContext from "../context/dropzone/dropzoneContext"
 
 const Dropzone = () => {
-  // el useCallback mejora los renderings que hace cuando se van pasando data por ejemplo en la fn de onDrop!
 
-  // TODO: Mejora el perfomance y trata mejor los rendering de la app
+   const DropzoneContext = useContext(dropzoneContext);
+   const { mostrarAlerta } = DropzoneContext;
 
-  // fn que lee y sube el archivo, se tiene que pasar al hook de useDropzone, para funcionar, linea 41
-  const onDrop = useCallback(async (acceptedFiles) => {
+    // fn que lee y sube el archivo, se tiene que pasar al hook de useDropzone, para funcionar, linea 41
+  const onDropAccepted = useCallback(async (acceptedFiles) => {
     // acceptedfiles es una fn que lee el archivo que subimos para tratarlo en nuestra fn onDrop
-    console.log(acceptedFiles);
-    // crear un form data para pasarlo en la res, para que la peticion se pueda recibir el archivo
+    //console.log(acceptedFiles);
+    // TODO: crear un form data para pasarlo en la res, para que la peticion se pueda recibir el archivo
     const formData = new FormData();
     // append lo usamos para agregar el archivo, ya que FormData es como tipo de objeto.
     // lo va a nombrar como "archivo" tal como lo espera el endpoint
+    
     formData.append("archivo", acceptedFiles[0]);
-    // hacemos la respuesta
+
     try {
       const res = await clienteAxios.post("/api/archivos", formData);
       console.log(res.data);
@@ -27,18 +31,22 @@ const Dropzone = () => {
     }
   }, []);
 
+  // fn que si que se ejecuta cuando el archivo fue rechazado, ya sea por formato o por que excede el limite!
+  const onDropRejected = () => {
+    mostrarAlerta('El archivo pesa mas de 1MB, crea una cuenta y sube tu archivo hasta 10MB')
+  };
+
   // Extraer contenido para poner funcionalidad del dropzone
   const {
     getRootProps,
     getInputProps,
     isDragActive,
     acceptedFiles,
-  } = useDropzone({ onDrop });
+  } = useDropzone({ onDropAccepted, onDropRejected, maxSize: 100000 });
 
-  // fn que muestra los archivos soltados en el dropzone
+  // fn que muestra el listado de los archivos soltados en el dropzone -> componente condicional
   const archivos = acceptedFiles.map((archivo, i) => {
     console.log(archivo);
-
     return (
       <li
         key={`${archivo.lastModified}-${i}`}
@@ -52,31 +60,55 @@ const Dropzone = () => {
     );
   });
 
+  // fn onClick que crea el enlace del archivo para luego compartirlo
+  const crearEnlace = () => {
+    console.log("creando enlace");
+  };
+
   return (
     <div className='md:flex-1 mb-3 mx-2 mt-16 lg:mt-0 flex flex-col items-center justify-center border-dashed border-gray-400 border-2 bg-gray-100 px-4'>
-      <ul>{archivos}</ul>
+      {/**TODO: Condicion que muestra el resumen de lo que subes si hay un archivo subido, pero si no hay muestra el dropzone */}
+      {acceptedFiles.length > 0 ? (
+        <>
+          {/** return de la fn que lista los archivos*/}
+          <div className='mt-10 w-full'>
+            <h4 className='text-2xl font-bold text-center mb-4'>Archivos</h4>
+            <ul>{archivos}</ul>
 
-      <div {...getRootProps({ className: "dropzone w-full py-32" })}>
-        <input className='h-100' {...getInputProps()} />
-        <div className='text-center p-3'>
-          {isDragActive ? (
-            <p className='text-2xl text-gray-600 font-semibold'>
-              Suelta el archivo
-            </p>
-          ) : (
-            <>
-              <p className='text-2xl text-gray-600 font-semibold'>
-                Selecciona un archivo y arrastralo aqui
-              </p>
-              <button
-                className='bg-gray-700 w-full py-4 rounded-lg text-white my-10 hover:bg-gray-800  font-semibold'
-                type='button'>
-                Selecciona archivos para subir
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+            <button
+              type='button'
+              className='bg-blue-700 w-full py-4 rounded-lg text-white my-10 hover:bg-blue-600  font-semibold'
+              onClick={() => crearEnlace()}>
+              Crear enlace
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          {/** Return del Dropzone */}
+          <div {...getRootProps({ className: "dropzone w-full py-32" })}>
+            <input className='h-100' {...getInputProps()} />
+            <div className='text-center p-3'>
+              {isDragActive ? (
+                <p className='text-2xl text-gray-600 font-semibold'>
+                  Suelta el archivo
+                </p>
+              ) : (
+                <>
+                  <p className='text-2xl text-gray-600 font-semibold'>
+                    Selecciona un archivo y arrastralo aqui
+                  </p>
+                  <button
+                    className='bg-blue-700 w-full py-4 rounded-lg text-white my-10 hover:bg-blue-600  font-semibold'
+                    type='button'>
+                    Selecciona archivos para subir
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
