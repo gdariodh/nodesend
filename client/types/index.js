@@ -20,6 +20,7 @@ export const LIMPIAR_ALERTA = "LIMPIAR_ALERTA";
 export const MOSTRAR_ALERTA = "MOSTRAR_ALERTA"
 
 // subida archivo
+export const SUBIR_ARCHIVO = "SUBIR_ARCHIVO"
 export const SUBIR_ARCHIVO_EXITO = "SUBIR_ARCHIVO_EXITO"
 export const SUBIR_ARCHIVO_ERROR = "SUBIR_ARCHIVO_ERROR"
 // enlaces
