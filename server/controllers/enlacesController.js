@@ -11,12 +11,14 @@ exports.nuevoEnlace = async (req, res, next) => {
     return res.status(400).json({ errores: errores.array() });
   }
 
-  const { nombre_original } = req.body;
+  console.log(req.body)
+
+  const { nombre_original, nombre } = req.body;
 
   // Crear un objeto de enlace
   const enlace = new Enlaces();
   enlace.url = shortid.generate();
-  enlace.nombre = shortid.generate();
+  enlace.nombre = nombre;
   enlace.nombre_original = nombre_original;
 
   // Si el usuario esta Autenticado - rol de autenticado
@@ -71,3 +73,16 @@ exports.obtenerEnlace = async (req, res, next) => {
     console.log("Aun hay descargas");
   }
 };
+
+// obtiene un listado de todos los enlaces
+
+exports.listadoEnlaces = async(req,res) => {
+  try {
+    // TODO: para traernos todos usamos el find({}) con un objeto vacio para que no haya filtro
+                                          // select para que traiga solo las url
+    const enlaces = await Enlaces.find({}).select('url -_id'); // -_id para quitar el id de la consulta
+    res.json({enlaces})
+  } catch (error) {
+    console.log(error);
+  }
+}

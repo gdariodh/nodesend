@@ -19,6 +19,10 @@ router.post(
   enlacesController.nuevoEnlace
 );
 
+router.get('/',
+  enlacesController.listadoEnlaces
+)
+
 // un param es por ejemplo /:id y asi es opcional :/id?
 router.get(
   "/:url",

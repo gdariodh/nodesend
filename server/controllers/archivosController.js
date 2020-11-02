@@ -10,7 +10,7 @@ exports.subirArchivo = async (req, res, next) => {
 
   const configuracionMulter = {
     // si el usuario esta autenticado 10MB sino 1 MB
-    limits: { fileSize: req.usuario ? 1024 * 1024 * 10 : 1024 * 1024 },
+    limits: { fileSize: req.usuario ? ((1024 * 1024) * 10) : 1024 * 1024 },
     storage: (fileStorage = multer.diskStorage({
       destination: (req, file, cb) => {
         cb(null, __dirname + "/../uploads");
