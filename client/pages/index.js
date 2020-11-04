@@ -24,10 +24,12 @@ export default function Home() {
     <>
       <Layout>
         <div className='md:w-4/5 xl:3/5 mx-auto mb-32'>
+        {/** Si hay una url creada desde el DropzoneState, ejecutar este componente */}
           {url ? (
             <>
               {/** TODO: ponemos el host en variables de entorno, para configurarlo en produccion */}
               <p className='text-center lg:text-2xl mb-6 text-xl'>
+              {/** TODO: cuando ya inyectamos la url, ya esta creada desde el dropzoneState mediante su useReducer */}
                 <span className='font-bold text-red-500 text-3xl'>URL:</span>{" "}
                 {`${process.env.frontendURL}/enlaces/${url}`}
               </p>

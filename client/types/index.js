@@ -26,4 +26,6 @@ export const SUBIR_ARCHIVO_ERROR = "SUBIR_ARCHIVO_ERROR"
 // enlaces
 export const CREAR_ENLACE_EXITO = "CREAR_ENLACE_EXITO"
 export const CREAR_ENLACE_ERROR = "CREAR_ENLACE_ERROR"
+// limpiar state
+export const LIMPIAR_STATE = "LIMPIAR_STATE"
 

@@ -10,6 +10,7 @@ import {
   SUBIR_ARCHIVO_ERROR,
   CREAR_ENLACE_EXITO,
   CREAR_ENLACE_ERROR,
+  LIMPIAR_STATE,
 } from "../../types";
 
 const DropzoneState = ({ children }) => {
@@ -68,25 +69,36 @@ const DropzoneState = ({ children }) => {
   };
 
   // fn onClick que crea el enlace del archivo para luego compartirlo
-  const crearEnlace =  async () => {
+  const crearEnlace = async () => {
     const data = {
       nombre_original: state.nombre,
       nombre: state.nombre_hash,
       descargas: state.descargas,
       password: state.password,
-      autor: state.autor
-    }
+      autor: state.autor,
+    };
 
     try {
-      const res = await clienteAxios.post('/api/enlaces',data);
+      const res = await clienteAxios.post("/api/enlaces", data);
       //console.log(res.data.msg)
       dispatch({
-        type:CREAR_ENLACE_EXITO,
-        payload: res.data.msg
-      })
-    } catch (error) { 
+        type: CREAR_ENLACE_EXITO,
+        payload: res.data.msg,
+      });
+    } catch (error) {
       console.log(error);
+      dispatch({
+        type: CREAR_ENLACE_ERROR,
+        payload: error.response.data.msg
+      })
     }
+  };
+
+  //TODO: limpia todo el state, se manda y se ejecuta en Header en el logo, cuando quieran hacer redirect al "/"
+  const limpiarState = () => {
+    dispatch({
+      type: LIMPIAR_STATE,
+    });
   };
 
   return (
@@ -103,7 +115,9 @@ const DropzoneState = ({ children }) => {
         mostrarAlerta,
         subirArchivo,
         crearEnlace,
-      }}>
+        limpiarState,
+      }}
+    >
       {children}
     </dropzoneContext.Provider>
   );
