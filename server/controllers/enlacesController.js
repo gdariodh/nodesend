@@ -43,6 +43,7 @@ exports.nuevoEnlace = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
+    res.status(500).json({ msg: "Hubo un error en la creacion del enlace" });
   }
 };
 
@@ -50,6 +51,7 @@ exports.nuevoEnlace = async (req, res, next) => {
 exports.obtenerEnlace = async (req, res, next) => {
   const { url } = req.params;
   // verificar si existe el enlace
+  console.log(url)
   const enlace = await Enlaces.findOne({ url });
   if (!enlace) {
     res.status(404).json({ msg: "El enlace no existe" });
@@ -57,21 +59,9 @@ exports.obtenerEnlace = async (req, res, next) => {
   }
   // Si existe
   res.json({ archivo: enlace.nombre });
-  const { descargas, nombre } = enlace;
-  // Si las descargas son iguales a 1 -> Borrar entrada y borrar el archivo
-  if (descargas === 1) {
-    // Eliminar el archivo
-    req.archivo = nombre; // inyectamos req.archivo a la req
-    // para que pase al siguiente controllador que es de archivosController
-    next();
-    // Eliminar la entrada de la db
-    await Enlaces.findOneAndRemove(req.params.url);
-  } else {
-    // Si las descargas son mayores a 1 -> Restar una descarga
-    enlace.descargas--;
-    await enlace.save();
-    console.log("Aun hay descargas");
-  }
+
+  // que se vaya al siguiente controlador, obviamente si hay en algun caso alguno, TODO: si no hace nada.
+  next()
 };
 
 // obtiene un listado de todos los enlaces

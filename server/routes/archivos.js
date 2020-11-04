@@ -9,4 +9,12 @@ const archivosController = require("../controllers/archivosController.js");
 
 router.post("/", auth, archivosController.subirArchivo);
 
+// TODO: implementamos a la hora de poner para descargar en la interfaz del frontend con nextjs
+
+// descarga un archivos
+router.get("/:archivo", 
+archivosController.descargarArchivo,
+archivosController.eliminarArchivo
+);
+
 module.exports = router;

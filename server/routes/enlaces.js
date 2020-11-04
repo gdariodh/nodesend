@@ -5,7 +5,6 @@ const auth = require("../middleware/auth");
 const router = express.Router();
 // controlador del endpoint
 const enlacesController = require("../controllers/enlacesController");
-const archivosController = require("../controllers/archivosController");
 // primero el validator se usa antes del controllador del verbo del endpoint, y luego los mensajes en el controllador del verbo
 const { check } = require("express-validator");
 
@@ -19,15 +18,12 @@ router.post(
   enlacesController.nuevoEnlace
 );
 
-router.get('/',
-  enlacesController.listadoEnlaces
-)
+router.get("/", enlacesController.listadoEnlaces);
 
 // un param es por ejemplo /:id y asi es opcional :/id?
 router.get(
   "/:url",
-  enlacesController.obtenerEnlace,
-  archivosController.eliminarArchivo
+  enlacesController.obtenerEnlace
 );
 
 module.exports = router;
