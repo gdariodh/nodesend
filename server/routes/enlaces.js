@@ -18,11 +18,21 @@ router.post(
   enlacesController.nuevoEnlace
 );
 
+// trae todos los enlaces
 router.get("/", enlacesController.listadoEnlaces);
 
 // un param es por ejemplo /:id y asi es opcional :/id?
 router.get(
   "/:url",
+  enlacesController.tienePassword,
+  enlacesController.obtenerEnlace
+);
+
+// TODO: endpoint que verifica "tienePassword" de router.get('/:url', enlaces.tienePassword)
+// TODO: en pocas palabras es la continuacion de tienePassword, que lo verifica y valida si correcto.
+router.post(
+  "/:url",
+  enlacesController.verificarTienePassword,
   enlacesController.obtenerEnlace
 );
 
