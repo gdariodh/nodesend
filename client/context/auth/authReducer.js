@@ -5,6 +5,7 @@ y asi se conecta el state del context y el reducer del context*/
 import {
   REGISTRO_EXITOSO,
   REGISTRO_ERROR,
+  REGISTRO_REDIRECCION,
   LIMPIAR_ALERTA,
   LOGIN_EXITOSO,
   LOGIN_ERROR,
@@ -24,6 +25,7 @@ const authReducer = (state, action) => {
       };
 
       case LOGIN_EXITOSO:
+      case REGISTRO_REDIRECCION:
         localStorage.setItem('token', action.payload)
         return{
           ...state,

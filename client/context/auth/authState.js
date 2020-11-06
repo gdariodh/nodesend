@@ -1,5 +1,6 @@
 // Son las funciones que ejecutan las funciones que tenemos en el reducer. o las funciones que engloban la app
 import React, { useReducer } from "react";
+import { useRouter } from "next/router";
 // context
 import authContext from "./authContext";
 // reducer - modifica o altera el state
@@ -8,6 +9,7 @@ import authReducer from "./authReducer";
 import {
   REGISTRO_EXITOSO,
   REGISTRO_ERROR,
+  REGISTRO_REDIRECCION,
   LIMPIAR_ALERTA,
   LOGIN_EXITOSO,
   LOGIN_ERROR,
@@ -20,6 +22,8 @@ import clienteAxios from "../../config/axios";
 import tokenAuth from "../../config/tokenAuth";
 
 export default function AuthState({ children }) {
+  // TODO: para hacer redirecciones programadas
+  const router = useRouter();
   // definir state inicial -> se va modificando con el authReducer
   const initialState = {
     // asi se hace en next la obtencion del localStorage
@@ -51,6 +55,22 @@ export default function AuthState({ children }) {
         type: REGISTRO_EXITOSO,
         payload: alerta,
       });
+
+      //TODO: crea el token
+     try {
+      const response = await clienteAxios.post("/api/auth", datos);
+      dispatch({
+        type: REGISTRO_REDIRECCION,
+        payload: response.data.token,
+      });
+     } catch (error) {
+       console.log(error)
+     }
+
+      // TODO: redireccionar al inicio 
+      setTimeout(() => {
+        router.push("/");
+      }, 1750);
     } catch (error) {
       // asi se leen los msg de error
       // console.log(error.response.data.msg);
@@ -149,7 +169,8 @@ export default function AuthState({ children }) {
         iniciarSesion,
         usuarioAutenticado,
         cerrarSesion,
-      }}>
+      }}
+    >
       {children}
     </authContext.Provider>
   );

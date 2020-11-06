@@ -3,9 +3,11 @@
 // Los console.log se mostraran la consola de next, los unico clg que se muestran en el navegador son los del template.
 // TODO: MAS INFORMACION sobre el routing dinamico TODO: https://nextjs.org/docs/basic-features/data-fetching
 
-import React from "react";
-import Layout from "../../components/Layout";
+import React, { useState } from "react";
 import clienteAxios from "../../config/axios";
+// component
+import Layout from "../../components/Layout";
+import Alerta from "../../components/Alerta";
 // TODO: Vamos hacer el routing dinamico con data fetching que es para que cargue mas rapido, el de phunt lo hicimos con dynamic routes
 
 // TODO: fn que retornara las props que se utilizara el componente template "Enlace"
@@ -49,29 +51,113 @@ export async function getServerSidePaths() {
 // Template "Enlace"
 const Enlace = ({ enlace }) => {
   //TODO: enlace es la url del archivo a compartir
-  console.log(enlace);
+  //console.log(enlace);
+
+  // useState para controlar la interfaz de pedir password del enlace, por defecto viene True, si es hay un password
+  const [pedir_password, setPedirPassword] = useState(enlace.password);
+
+  // useState para encapsular la response cuando verificado el password
+  const [password, setPassword] = useState("");
+  const [password_error, setPasswordError] = useState(null);
+
+  // verifica el password -> TODO: se usa cuando el que crea el enlace le asigna un password, si no, no aparece  en la interfaz.
+  const verificarPassword = async (e) => {
+    e.preventDefault();
+
+    // TODO:  password viene del useState
+    const data = {
+      password,
+    };
+
+    try {
+      // TODO: el parametro es el ${enlace.enlace} que es el /:url, y data es el password que se pasa por el body
+      const res = await clienteAxios.post(
+        `/api/enlaces/${enlace.enlace}`,
+        data
+      );
+      //console.log(res);
+      // si es correcto, el pedir_password pasara a false y se mostrara la otra interfaz
+      setPedirPassword(res.data.password);
+    } catch (error) {
+      setPasswordError(error.response.data.msg);
+      setTimeout(() => {
+        setPasswordError(null);
+      }, 2500);
+    }
+  };
+
+  //TODO: si el enlace no tiene password, va a mostrar la interfaz para descargar el archivo, pero si tiene, pide password!
+
   return (
     <Layout>
-      <h1 className="text-4xl text-center text-gray-700">
-        Descarga tu archivo:
-      </h1>
-      <div className="flex items-center justify-center mt-10">
-      {/** TODO: ANTES -> redireccionamos a la carpeta del backend, ver index.js de server para entender,
+      {/** Si el usuario se equivoca de password */}
+      {password_error && <Alerta mensaje={password_error} />}
+
+      {/** Si el enlace tiene password, mostrar interfaz que pide password, sino muestra la otra que descarga el archivo */}
+      {pedir_password ? (
+        <>
+          {/** Formulario reutilizado de useFormulario */}
+          <div>
+            <p className="text-center font-semibold">
+              Este enlace esta protegido por un password, ingresa el password:
+            </p>
+
+            <div className="flex justify-center mt-5">
+              <div className="w-full max-w-lg">
+                <form
+                  onSubmit={(e) => verificarPassword(e)}
+                  className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
+                >
+                  <div className="mb-4">
+                    <label
+                      className="block text-black text-sm font-bold mb-2"
+                      htmlFor="password"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="password del enlace"
+                      id="password"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <input
+                    type="submit"
+                    className="bg-red-500 hover:bg-gray-900 w-full p-3 border rounded text-white uppercase font-bold"
+                    value="validar password"
+                  />
+                </form>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <h1 className="text-4xl text-center text-gray-700">
+            Descarga tu archivo:
+          </h1>
+          <div className="flex items-center justify-center mt-10">
+            {/** TODO: ANTES -> redireccionamos a la carpeta del backend, ver index.js de server para entender,
       En pocas palabras, habilitamos la carpeta donde se guardan los archivos subidos. 
       antes estaba como {`${process.env.backendURL}/${enlace.archivo}`} que nada mas nos mostraba el archivo
        */}
 
-       {/**TODO: AHORA -> ya tenemos habilitada la carpeta, y creamos un controlador que nos permite descargar archivos. 
+            {/**TODO: AHORA -> ya tenemos habilitada la carpeta, y creamos un controlador que nos permite descargar archivos. 
        Y cambiamos el href, ahora estaremos conectado con el controlador que creamos.
         */}
-        <a
-          href={`${process.env.backendURL}/api/archivos/${enlace.archivo}`}
-          className="bg-red-500 text-center px-10 py-3 rounded uppercase font-bold text-white cursor-pointer"
-          download
-        >
-          Aqui
-        </a>
-      </div>
+            <a
+              href={`${process.env.backendURL}/api/archivos/${enlace.archivo}`}
+              className="bg-red-500 text-center px-10 py-3 rounded uppercase font-bold text-white cursor-pointer"
+              download
+            >
+              Aqui
+            </a>
+          </div>
+        </>
+      )}
     </Layout>
   );
 };

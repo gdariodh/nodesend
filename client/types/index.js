@@ -5,6 +5,7 @@
 // crear o registrar usuario
 export const REGISTRO_EXITOSO = "REGISTRO_EXITOSO";
 export const REGISTRO_ERROR = "REGISTRO_ERROR";
+export const REGISTRO_REDIRECCION = "REGISTRO_REDIRECCION";
 // login de usuario registrado
 export const LOGIN_EXITOSO = "LOGIN_EXITOSO";
 export const LOGIN_ERROR = "LOGIN_ERROR";
@@ -28,4 +29,7 @@ export const CREAR_ENLACE_EXITO = "CREAR_ENLACE_EXITO"
 export const CREAR_ENLACE_ERROR = "CREAR_ENLACE_ERROR"
 // limpiar state
 export const LIMPIAR_STATE = "LIMPIAR_STATE"
+// leer datos que ingresan en el formulario de descargas y password en la creacion del enlace
+export const AGREGAR_PASSWORD = "AGREGAR_PASSWORD"
+export const AGREGAR_DESCARGAS = "AGREGAR_DESCARGAS"
 

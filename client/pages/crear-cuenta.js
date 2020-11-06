@@ -17,13 +17,18 @@ export default function crearCuenta() {
 
   return (
     <Layout>
-      <div className='md:w-4/5 xl:w-3/5 mx-auto mb-32'>
-        <h2 className='text-4xl font-sans font-bold text-black text-center'>
+      <div className="md:w-4/5 xl:w-3/5 mx-auto mb-32">
+        <h2 className="text-4xl font-sans font-bold text-black text-center">
           Crear cuenta
         </h2>
         {mensaje && <Alerta mensaje={mensaje} />}
-        <div className='flex justify-center mt-5'>
-          <div className='w-full max-w-lg'>{Formulario()}</div>
+        {/** flex justify-center para centrar el elemento */}
+        <div className="flex justify-center mt-5">
+          {/** estas clases son para centrar el elemento
+         TODO: el "max-w-lg sirve para que cuando la pantalla se agrande,
+          se forme una caja como formulario sin ocupar todo el ancho. pero si es tipo movil ocupa todo el ancho! "w-full"
+        */}
+          <div className="w-full max-w-lg">{Formulario()}</div>
         </div>
       </div>
     </Layout>

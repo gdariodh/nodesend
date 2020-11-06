@@ -7,6 +7,8 @@ import {
   CREAR_ENLACE_EXITO,
   CREAR_ENLACE_ERROR,
   LIMPIAR_STATE,
+  AGREGAR_PASSWORD,
+  AGREGAR_DESCARGAS
 } from "../../types";
 
 const dropzoneReducer = (state, action) => {
@@ -58,6 +60,17 @@ const dropzoneReducer = (state, action) => {
         autor:null,
         url:null,
       };
+
+      case AGREGAR_PASSWORD:
+        return{
+          ...state,
+          password:action.payload
+        }
+        case AGREGAR_DESCARGAS:
+          return{
+            ...state,
+            descargas:action.payload
+          }
 
     default:
       return state;

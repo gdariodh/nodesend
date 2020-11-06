@@ -2,12 +2,20 @@
 import React, { useState, useCallback, useContext } from "react";
 // libreria
 import { useDropzone } from "react-dropzone";
-// cliente para hacer las peticiones
-import clienteAxios from "../config/axios";
 // context
 import dropzoneContext from "../context/dropzone/dropzoneContext";
+import authContext from "../context/auth/authContext"; 
+// components
+import FormularioSelect from "../components/Formulario"
 
 const Dropzone = () => {
+
+   // context de usuario
+   const AuthContext = useContext(authContext);
+   const { autenticado } = AuthContext;
+
+   //TODO: Dropzone comienza aca 
+
   const DropzoneContext = useContext(dropzoneContext);
   const { mostrarAlerta, subirArchivo, crearEnlace, cargando } = DropzoneContext;
 
@@ -40,7 +48,7 @@ const Dropzone = () => {
 
   // fn que muestra el listado de los archivos soltados en el dropzone -> componente condicional
   const archivos = acceptedFiles.map((archivo, i) => {
-    console.log(archivo);
+    //console.log(archivo);
     return (
       <li
         key={`${archivo.lastModified}-${i}`}
@@ -63,6 +71,14 @@ const Dropzone = () => {
           <div className='mt-10 w-full'>
             <h4 className='text-2xl font-bold text-center mb-4'>Archivos</h4>
             <ul>{archivos}</ul>
+
+            {/** Opcion que sale si el usuario tiene token o autenticado y permite poner un limite de descargas */}
+
+          {
+            autenticado && <FormularioSelect/> 
+          }
+    
+
             {cargando ? (
               <p className='my-10 text-center text-gray-700 font-semibold'>Subiendo archivo...</p>
             ) : (
