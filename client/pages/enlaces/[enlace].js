@@ -30,7 +30,7 @@ export async function getServerSideProps({ params }) {
 export async function getServerSidePaths() {
   // obtenemos todos los enlaces para el routing dinamico
   const enlaces = await clienteAxios("/api/enlaces");
-  console.log(enlaces.data);
+  //console.log(enlaces.data);
 
   // retornamos los parametros que seran consumidos
   return {
@@ -62,19 +62,18 @@ const Enlace = ({ enlace }) => {
 
   // verifica el password -> TODO: se usa cuando el que crea el enlace le asigna un password, si no, no aparece  en la interfaz.
   const verificarPassword = async (e) => {
+    console.log(enlace);
     e.preventDefault();
-
     // TODO:  password viene del useState
+
+    // lo ponemos asi porque asi recibe el req en el endpoint .post /api/enlace/:url, si no se pone asi, no retorna
     const data = {
       password,
     };
 
     try {
       // TODO: el parametro es el ${enlace.enlace} que es el /:url, y data es el password que se pasa por el body
-      const res = await clienteAxios.post(
-        `/api/enlaces/${enlace.enlace}`,
-        data
-      );
+      const res = await clienteAxios.post(`/api/enlaces/${enlace.url}`, data);
       //console.log(res);
       // si es correcto, el pedir_password pasara a false y se mostrara la otra interfaz
       setPedirPassword(res.data.password);
@@ -144,7 +143,6 @@ const Enlace = ({ enlace }) => {
       En pocas palabras, habilitamos la carpeta donde se guardan los archivos subidos. 
       antes estaba como {`${process.env.backendURL}/${enlace.archivo}`} que nada mas nos mostraba el archivo
        */}
-
             {/**TODO: AHORA -> ya tenemos habilitada la carpeta, y creamos un controlador que nos permite descargar archivos. 
        Y cambiamos el href, ahora estaremos conectado con el controlador que creamos.
         */}

@@ -12,7 +12,7 @@ import {
   CREAR_ENLACE_ERROR,
   LIMPIAR_STATE,
   AGREGAR_PASSWORD,
-  AGREGAR_DESCARGAS
+  AGREGAR_DESCARGAS,
 } from "../../types";
 
 const DropzoneState = ({ children }) => {
@@ -91,8 +91,8 @@ const DropzoneState = ({ children }) => {
       console.log(error);
       dispatch({
         type: CREAR_ENLACE_ERROR,
-        payload: error.response.data.msg
-      })
+        payload: error.response.data.msg,
+      });
     }
   };
 
@@ -105,20 +105,18 @@ const DropzoneState = ({ children }) => {
 
   // TODO: funciones que lee el formulario de password y descargas -> se envia a formulario
   const agregarPassword = (password) => {
-   dispatch({
-     type: AGREGAR_PASSWORD,
-     payload: password
-   })
-  }
+    dispatch({
+      type: AGREGAR_PASSWORD,
+      payload: password,
+    });
+  };
 
   const agregarDescargas = (descargas) => {
     dispatch({
       type: AGREGAR_DESCARGAS,
-      payload: descargas
-    })
-   }
-
-  
+      payload: descargas,
+    });
+  };
 
   return (
     <dropzoneContext.Provider
@@ -136,7 +134,7 @@ const DropzoneState = ({ children }) => {
         crearEnlace,
         limpiarState,
         agregarPassword,
-        agregarDescargas
+        agregarDescargas,
       }}
     >
       {children}
